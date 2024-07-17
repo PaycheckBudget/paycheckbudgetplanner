@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            background-color: #fff;
+            padding: 100px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 0px 0;
+        }
+        .theme-button, .add-row-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 15px;
+            background-color: #000;
+            color: #fff;
+        }
+        .add-row-button {
+            transform: scale(0.8); /* Decrease size by 20% */
+        }
+        .theme-button.active, .add-row-button.active {
+            animation: buttonClick 0.3s ease;
+        }
+        @keyframes buttonClick {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        h1 {
+            text-align: center;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 3.5em;
+            margin-bottom: 60px;
+        }
+        .subtitle {
+            text-align: center;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            font-size: 0.8em;
+            border: 0.5px solid #ddd;
+        }
+        th {
+            font-size: 1em;
+            border: none;
+            background-color: #F5ED6F;
+        }
+        .totals {
+            font-weight: bold;
+            background-color: #FFFCCB;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            border: none;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            font-size: 16px;
+        }
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+        }
+        .dark-theme {
+            background-color: #F7E9EC;
+            color: #000000;
+        }
+        .dark-theme th {
+            background-color: #FABAD1;
+        }
+        .dark-theme td {
+            background-color: #F7F3F3;
+        }
+        .dark-theme input[type="number"], .dark-theme input[type="text"] {
+            background-color: #F7F3F3;
+        }
+        .dark-theme .totals {
+            background-color: #FFEBF5;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+                font-family: 'Patrick Hand', cursive;
+            }
+            .subtitle {
+                font-size: 0.9em;
+                font-family: 'Patrick Hand', cursive;
+            }
+        }
+        .add-row-button::before {
+            content: '+ ';
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-button" id="theme-button">Change Theme</button>
+        <div class="subtitle">Grab your favorite drink and plan your grocery list ☕</div>
+        <h1>Grocery Tracker</h1>
+        <table id="grocery-table">
+            <thead>
+                <tr>
+                    <th id="item-column-name">ITEM</th>
+                    <th>QUANTITY</th>
+                    <th>PRICE PER UNIT ($)</th>
+                    <th>TOTAL COST ($)</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Generate 13 rows dynamically for inputs -->
+                <script>
+                    const itemColumnName = 'ITEM'; // Change this value to update the item column name
+
+                    for (let i = 1; i <= 13; i++) {
+                        document.write(`
+                            <tr id="row-${i}">
+                                <td><input type="text" id="item-${i}" placeholder="${itemColumnName}"></td>
+                                <td><input type="number" class="quantity" id="quantity-${i}" min="0" value="0"></td>
+                                <td><input type="number" class="price-per-unit" id="price-per-unit-${i}" min="0" step="0.01" value="0.00"></td>
+                                <td id="total-cost-${i}">0.00</td>
+                            </tr>
+                        `);
+                    }
+                </script>
+            </tbody>
+            <tfoot>
+                <tr class="totals" id="total-row">
+                    <td colspan="3">Total</td>
+                    <td id="grand-total">0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+        <button class="add-row-button" id="add-row-button">Add Row</button>
+    </div>
+    <script>
+        let rowCount = 13;
+
+        const updateTotals = () => {
+            let grandTotal = 0;
+            for (let i = 1; i <= rowCount; i++) {
+                const quantity = parseFloat(document.getElementById(`quantity-${i}`).value) || 0;
+                const pricePerUnit = parseFloat(document.getElementById(`price-per-unit-${i}`).value) || 0;
+                const totalCost = quantity * pricePerUnit;
+                document.getElementById(`total-cost-${i}`).innerText = totalCost ? totalCost.toFixed(2) : '0.00';
+                grandTotal += totalCost;
+            }
+            document.getElementById('grand-total').innerText = grandTotal.toFixed(2);
+        };
+
+        const addRow = () => {
+            rowCount++;
+            const tableBody = document.getElementById('table-body');
+            const newRow = document.createElement('tr');
+            newRow.id = `row-${rowCount}`;
+            newRow.innerHTML = `
+                <td><input type="text" id="item-${rowCount}" placeholder="${itemColumnName}"></td>
+                <td><input type="number" class="quantity" id="quantity-${rowCount}" min="0" value="0"></td>
+                <td><input type="number" class="price-per-unit" id="price-per-unit-${rowCount}" min="0" step="0.01" value="0.00"></td>
+                <td id="total-cost-${rowCount}">0.00</td>
+            `;
+            tableBody.appendChild(newRow);
+            document.querySelectorAll('.quantity, .price-per-unit').forEach(input => {
+                input.addEventListener('input', updateTotals);
+            });
+            saveToLocalStorage();
+        };
+
+        document.getElementById('add-row-button').addEventListener('click', () => {
+            addRow();
+            const button = document.getElementById('add-row-button');
+            button.classList.add('active');
+            setTimeout(() => {
+                button.classList.remove('active');
+            }, 300);
+        });
+
+        document.querySelectorAll('.quantity, .price-per-unit').forEach(input => {
+            input.addEventListener('input', updateTotals);
+        });
+
+        const saveToLocalStorage = () => {
+            const rows = [];
+            for (let i = 1; i <= rowCount; i++) {
+                const item = document.getElementById(`item-${i}`).value || '';
+                const quantity = document.getElementById(`quantity-${i}`).value || 0;
+                const pricePerUnit = document.getElementById(`price-per-unit-${i}`).value || 0.00;
+                rows.push({ item, quantity, pricePerUnit });
+            }
+            localStorage.setItem('rows', JSON.stringify(rows));
+            localStorage.setItem('rowCount', rowCount);
+        };
+
+        const loadFromLocalStorage = () => {
+            const savedRows = JSON.parse(localStorage.getItem('rows')) || [];
+            if (savedRows.length > 0) {
+                rowCount = parseInt(localStorage.getItem('rowCount'), 10) || 13;
+                const tableBody = document.getElementById('table-body');
+                tableBody.innerHTML = '';
+                savedRows.forEach((row, index) => {
+                    const newRow = document.createElement('tr');
+                    newRow.id = `row-${index + 1}`;
+                    newRow.innerHTML = `
+                        <td><input type="text" id="item-${index + 1}" value="${row.item}" placeholder="${itemColumnName}"></td>
+                        <td><input type="number" class="quantity" id="quantity-${index + 1}" value="${row.quantity}" min="0"></td>
+                        <td><input type="number" class="price-per-unit" id="price-per-unit-${index + 1}" value="${row.pricePerUnit}" min="0" step="0.01"></td>
+                        <td id="total-cost-${index + 1}">0.00</td>
+                    `;
+                    tableBody.appendChild(newRow);
+                });
+                document.querySelectorAll('.quantity, .price-per-unit').forEach(input => {
+                    input.addEventListener('input', updateTotals);
+                });
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', () => {
+                    saveToLocalStorage();
+                    updateTotals();
+                });
+            });
+            updateTotals();
+
+            // Update item column name
+            document.getElementById('item-column-name').innerText = itemColumnName;
+        });
+
+        const themeButton = document.getElementById('theme-button');
+        const container = document.querySelector('.container');
+        let isDarkTheme = false;
+
+        themeButton.addEventListener('click', () => {
+            themeButton.classList.add('active');
+            setTimeout(() => {
+                themeButton.classList.remove('active');
+            }, 300);
+
+            isDarkTheme = !isDarkTheme;
+            if (isDarkTheme) {
+                container.classList.add('dark-theme');
+            } else {
+                container.classList.remove('dark-theme');
+            }
+        });
+    </script>
+</body>
+</html>

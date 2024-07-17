@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriptions Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F7E9EC;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            background-color: #fff;
+            padding: 100px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 0px 0;
+        }
+        .theme-button, .add-row-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 15px;
+            background-color: #000;
+            color: #fff;
+        }
+        .theme-button.active, .add-row-button.active {
+            animation: buttonClick 0.3s ease;
+        }
+        @keyframes buttonClick {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        h1 {
+            text-align: center;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 3.5em;
+            margin-bottom: 60px;
+        }
+        .subtitle {
+            text-align: center;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            font-size: 0.8em;
+            border: 0.5px solid #ddd;
+        }
+        th {
+            font-size: 1em;
+            border: none;
+            background-color: #9EDDE9;
+        }
+        .totals {
+            font-weight: bold;
+            background-color: #EAFCFF;
+        }
+        input[type="number"], input[type="text"], input[type="date"] {
+            width: 100%;
+            border: none;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            font-size: 16px;
+            background-color: transparent;
+        }
+        input[type="number"]:focus, input[type="text"]:focus, input[type="date"]:focus {
+            outline: none;
+        }
+        .dark-theme {
+            background-color: #F7E9EC;
+            color: #000000;
+        }
+        .dark-theme th {
+            background-color: #DCEDBF;
+        }
+        .dark-theme td {
+            background-color: #F7F3F3;
+        }
+        .dark-theme input[type="number"], .dark-theme input[type="text"], .dark-theme input[type="date"] {
+            background-color: #F7F3F3;
+        }
+        .dark-theme .totals {
+            background-color: #EEF6E0;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+                font-family: 'Patrick Hand', cursive;
+            }
+            .subtitle {
+                font-size: 0.9em;
+                font-family: 'Patrick Hand', cursive;
+            }
+        }
+        .add-row-button::before {
+            content: '+ ';
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-button" id="theme-button">Change Theme</button>
+        <div class="subtitle">Track your subscriptions efficiently 💳</div>
+        <h1>Subscriptions Tracker</h1>
+        <table id="subscriptions-table">
+            <thead>
+                <tr>
+                    <th>SUBSCRIPTION SERVICE</th>
+                    <th>PAYMENT DATE</th>
+                    <th>AMOUNT ($)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" id="service-1" placeholder="Service"></td>
+                    <td><input type="date" id="date-1"></td>
+                    <td><input type="number" class="amount" id="amount-1"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="service-2" placeholder="Service"></td>
+                    <td><input type="date" id="date-2"></td>
+                    <td><input type="number" class="amount" id="amount-2"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="service-3" placeholder="Service"></td>
+                    <td><input type="date" id="date-3"></td>
+                    <td><input type="number" class="amount" id="amount-3"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="service-4" placeholder="Service"></td>
+                    <td><input type="date" id="date-4"></td>
+                    <td><input type="number" class="amount" id="amount-4"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="service-5" placeholder="Service"></td>
+                    <td><input type="date" id="date-5"></td>
+                    <td><input type="number" class="amount" id="amount-5"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="service-6" placeholder="Service"></td>
+                    <td><input type="date" id="date-6"></td>
+                    <td><input type="number" class="amount" id="amount-6"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="service-7" placeholder="Service"></td>
+                    <td><input type="date" id="date-7"></td>
+                    <td><input type="number" class="amount" id="amount-7"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="service-8" placeholder="Service"></td>
+                    <td><input type="date" id="date-8"></td>
+                    <td><input type="number" class="amount" id="amount-8"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="service-9" placeholder="Service"></td>
+                    <td><input type="date" id="date-9"></td>
+                    <td><input type="number" class="amount" id="amount-9"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="service-10" placeholder="Service"></td>
+                    <td><input type="date" id="date-10"></td>
+                    <td><input type="number" class="amount" id="amount-10"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="service-11" placeholder="Service"></td>
+                    <td><input type="date" id="date-11"></td>
+                    <td><input type="number" class="amount" id="amount-11"></td>
+                </tr>
+                <tr>
+                    <td><input type="text" id="service-12" placeholder="Service"></td>
+                    <td><input type="date" id="date-12"></td>
+                    <td><input type="number" class="amount" id="amount-12"></td>
+                </tr>
+                <tr class="totals">
+                    <td colspan="2">Total</td>
+                    <td id="grand-total">0</td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="add-row-button" id="add-row-button">Add Row</button>
+    </div>
+    <script>
+        let rowCount = 12;
+
+        const updateTotals = () => {
+            let total = 0;
+            document.querySelectorAll('.amount').forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+            document.getElementById('grand-total').innerText = total.toFixed(2);
+        };
+
+        document.querySelectorAll('.amount').forEach(input => {
+            input.addEventListener('input', updateTotals);
+        });
+
+        const addRow = () => {
+            rowCount++;
+            const tableBody = document.querySelector('#subscriptions-table tbody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" id="service-${rowCount}" placeholder="Service"></td>
+                <td><input type="date" id="date-${rowCount}"></td>
+                <td><input type="number" class="amount" id="amount-${rowCount}"></td>
+            `;
+            tableBody.insertBefore(newRow, document.querySelector('.totals'));
+            document.querySelectorAll('.amount').forEach(input => {
+                input.addEventListener('input', updateTotals);
+            });
+            saveToLocalStorage();
+        };
+
+        document.getElementById('add-row-button').addEventListener('click', () => {
+            addRow();
+            const button = document.getElementById('add-row-button');
+            button.classList.add('active');
+            setTimeout(() => {
+                button.classList.remove('active');
+            }, 300);
+        });
+
+        const saveToLocalStorage = () => {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                localStorage.setItem(input.id, input.value);
+            });
+        };
+
+        const loadFromLocalStorage = () => {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                if (localStorage.getItem(input.id)) {
+                    input.value = localStorage.getItem(input.id);
+                }
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', () => {
+                    saveToLocalStorage();
+                    updateTotals();
+                });
+            });
+            updateTotals();
+        });
+
+        const themeButton = document.getElementById('theme-button');
+        const container = document.querySelector('.container');
+        let isDarkTheme = false;
+
+        themeButton.addEventListener('click', () => {
+            themeButton.classList.add('active');
+            setTimeout(() => {
+                themeButton.classList.remove('active');
+            }, 300);
+
+            isDarkTheme = !isDarkTheme;
+            if (isDarkTheme) {
+                container.classList.add('dark-theme');
+            } else {
+                container.classList.remove('dark-theme');
+            }
+        });
+    </script>
+</body>
+</html>
