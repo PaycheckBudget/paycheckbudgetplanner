@@ -408,45 +408,66 @@
             position: relative;
             display: inline-block;
         }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f1f1f1;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-        .dropdown-content a:hover {
-            background-color: #ddd;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        .dropdown:hover .dropbtn {
-            background-color: #3e8e41;
-        }
+        .dropbtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.dropbtn svg {
+    width: 40px;
+    height: 40px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+        
     </style>
 </head>
 <body>
     <div class="container">
         <div class="dropdown">
-            <button class="theme-button dropbtn">Tables</button>
-            <div class="dropdown-content">
-                <a href="index.html">Home</a>
-                <a href="bank-tracker.html">Bank Tracker</a>
-                <a href="cash-tracker.html">Cash Tracker</a>
-                <a href="gift-holiday-budget.html">Gift & Holiday Budget</a>
-                <a href="grocery-tracker.html">Grocery Tracker</a>
-                <a href="savings-goal-tracker.html">Savings Goal Tracker</a>
-                <a href="subscriptions-tracker.html">Subscriptions Tracker</a>
-            </div>
-        </div>
+    <button class="dropbtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 3H21V21H3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 9H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 15H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 3V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15 3V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+    <div class="dropdown-content">
+        <a href="index.html">Home</a>
+        <a href="bank-tracker.html">Bank Tracker</a>
+        <a href="cash-tracker.html">Cash Tracker</a>
+        <a href="gift-holiday-budget.html">Gift & Holiday Budget</a>
+        <a href="grocery-tracker.html">Grocery Tracker</a>
+        <a href="savings-goal-tracker.html">Savings Goal Tracker</a>
+        <a href="subscriptions-tracker.html">Subscriptions Tracker</a>
+    </div>
+</div>
         <button class="theme-button" id="theme-button">Change Theme</button>
         <div class="subtitle">Grab your favorite drink and plan your paycheck ☕</div>
         <h1>Paycheck Budget Planner</h1>
