@@ -841,12 +841,12 @@ window.location.href = 'https://bossinpajamas.com/b/paycheckbudgetplanner';
         const dropdown = document.querySelector('.dropdown');
         const dropbtn = dropdown.querySelector('.dropbtn');
         const dropdownContent = dropdown.querySelector('.dropdown-content');
-        
+
         dropbtn.addEventListener('click', (e) => {
             e.stopPropagation();
             dropdownContent.classList.toggle('show');
         });
-        
+
         document.addEventListener('click', (e) => {
             if (!dropdown.contains(e.target)) {
                 dropdownContent.classList.remove('show');
