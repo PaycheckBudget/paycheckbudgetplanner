@@ -8,7 +8,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #fff;
             margin: 0;
             padding: 0;
             display: flex;
@@ -16,10 +15,9 @@
         }
         .container {
             width: 100%;
-            max-width: 800px;
             background-color: #fff;
-            padding: 50px;
-            margin: 20px;
+            padding: 100px;
+            margin: 0;
         }
         .theme-button, .add-row-button {
             display: block;
@@ -31,9 +29,6 @@
             border-radius: 15px;
             background-color: #000;
             color: #fff;
-        }
-        .add-row-button {
-            transform: scale(0.8); /* Decrease size by 20% */
         }
         .theme-button.active, .add-row-button.active {
             animation: buttonClick 0.3s ease;
@@ -60,27 +55,6 @@
             font-family: 'Patrick Hand', cursive;
             font-size: 1em;
             margin-bottom: 20px;
-        }
-        .sticker-note {
-            width: 100%;
-            background-color: #FFFCCB;
-            margin: 0 auto 20px;
-            padding: 10px;
-            font-family: 'Patrick Hand', cursive;
-            text-align: left;
-            resize: both;
-            height: 200px; /* You can change the height here */
-        }
-        .sticker-note textarea {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background-color: transparent;
-            font-family: 'Patrick Hand', cursive;
-            text-align: left;
-            resize: none;
-            overflow: hidden;
-            outline: none;
         }
         table {
             width: 100%;
@@ -124,9 +98,6 @@
         .dark-theme td {
             background-color: #F7F3F3;
         }
-        .dark-theme .sticker-note {
-            background-color: #F4C8CC;
-        }
         .dark-theme input[type="number"], .dark-theme input[type="text"], .dark-theme input[type="date"] {
             background-color: #F7F3F3;
         }
@@ -150,16 +121,76 @@
             content: '+ ';
             font-size: 1.2em;
         }
+
+        /* Dropdown Menu for Tables Button */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #ddd;
+        }
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropbtn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        .dropbtn svg {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            padding: 8px;
+            color: black;
+        }
     </style>
 </head>
-<body>
+<body id="body">
     <div class="container">
+        <div class="dropdown">
+            <button class="dropbtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="4" y1="10" x2="20" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="10" y1="10" x2="10" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="dropdown-content">
+                <a href="index.html">Home</a>
+                <a href="bank-tracker.html">Bank Tracker</a>
+                <a href="cash-tracker.html">Cash Tracker</a>
+                <a href="gift-holiday-budget.html">Gift & Holiday Budget</a>
+                <a href="grocery-tracker.html">Grocery Tracker</a>
+                <a href="savings-goal-tracker.html">Savings Goal Tracker</a>
+                <a href="subscriptions-tracker.html">Subscriptions Tracker</a>
+            </div>
+        </div>
         <button class="theme-button" id="theme-button">Change Theme</button>
         <div class="subtitle">Keep track of your savings goals and progress</div>
         <h1>Savings Goal Tracker</h1>
-        <div class="sticker-note" id="sticker-note">
-            <textarea id="sticker-note-text" rows="4" placeholder="Your note here..."></textarea>
-        </div>
         <table id="goal-table">
             <thead>
                 <tr>
@@ -209,23 +240,28 @@
         };
 
         const saveToLocalStorage = () => {
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => {
-                localStorage.setItem(input.id, input.value);
+            const rows = [];
+            document.querySelectorAll('#goal-table-body tr:not(.totals)').forEach((row, index) => {
+                const goal = row.querySelector(`#goal-${index + 1}`).value;
+                const targetAmount = row.querySelector(`#target-amount-${index + 1}`).value;
+                const currentBalance = row.querySelector(`#current-balance-${index + 1}`).value;
+                const monthlyContribution = row.querySelector(`#monthly-contribution-${index + 1}`).value;
+                const targetDate = row.querySelector(`#target-date-${index + 1}`).value;
+                rows.push({ goal, targetAmount, currentBalance, monthlyContribution, targetDate });
             });
-            localStorage.setItem('sticker-note-text', document.getElementById('sticker-note-text').value);
+            localStorage.setItem('rows', JSON.stringify(rows));
         };
 
         const loadFromLocalStorage = () => {
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => {
-                if (localStorage.getItem(input.id)) {
-                    input.value = localStorage.getItem(input.id);
-                }
+            const rows = JSON.parse(localStorage.getItem('rows')) || [];
+            rows.forEach((row, index) => {
+                if (index >= rowCount) addRow();
+                document.querySelector(`#goal-${index + 1}`).value = row.goal;
+                document.querySelector(`#target-amount-${index + 1}`).value = row.targetAmount;
+                document.querySelector(`#current-balance-${index + 1}`).value = row.currentBalance;
+                document.querySelector(`#monthly-contribution-${index + 1}`).value = row.monthlyContribution;
+                document.querySelector(`#target-date-${index + 1}`).value = row.targetDate;
             });
-            if (localStorage.getItem('sticker-note-text')) {
-                document.getElementById('sticker-note-text').value = localStorage.getItem('sticker-note-text');
-            }
         };
 
         const generateRows = () => {
@@ -279,11 +315,11 @@
                     updateTotals();
                 });
             });
-            document.getElementById('sticker-note-text').addEventListener('input', saveToLocalStorage);
             updateTotals();
         });
 
         const themeButton = document.getElementById('theme-button');
+        const body = document.getElementById('body');
         const container = document.querySelector('.container');
         let isDarkTheme = false;
 
@@ -295,11 +331,11 @@
 
             isDarkTheme = !isDarkTheme;
             if (isDarkTheme) {
-                document.body.style.backgroundColor = '#F7E9EC';
                 container.classList.add('dark-theme');
+                body.style.backgroundColor = "#F7E9EC";
             } else {
-                document.body.style.backgroundColor = '#fff';
                 container.classList.remove('dark-theme');
+                body.style.backgroundColor = "#fff";
             }
         });
     </script>
