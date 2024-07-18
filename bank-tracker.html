@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -127,10 +127,70 @@
             content: '+ ';
             font-size: 1.2em;
         }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #ddd;
+        }
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropbtn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        .dropbtn svg {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            padding: 8px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="dropdown">
+            <button class="dropbtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="4" y1="10" x2="20" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="10" y1="10" x2="10" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="dropdown-content">
+                <a href="index.html">Home</a>
+                <a href="bank-tracker.html">Bank Tracker</a>
+                <a href="cash-tracker.html">Cash Tracker</a>
+                <a href="gift-holiday-budget.html">Gift & Holiday Budget</a>
+                <a href="grocery-tracker.html">Grocery Tracker</a>
+                <a href="savings-goal-tracker.html">Savings Goal Tracker</a>
+                <a href="subscriptions-tracker.html">Subscriptions Tracker</a>
+            </div>
+        </div>
         <button class="theme-button" id="theme-button">Change Theme</button>
         <div class="subtitle">Monitor your bank transactions 🏦</div>
         <h1>Bank Tracker</h1>
@@ -232,14 +292,14 @@
                 const outflow = document.getElementById(`outflow-${i}`).value;
                 rows.push({ date, description, inflow, outflow });
             }
-            localStorage.setItem('rows', JSON.stringify(rows));
-            localStorage.setItem('rowCount', rowCount);
+            localStorage.setItem('bankTrackerRows', JSON.stringify(rows));
+            localStorage.setItem('bankTrackerRowCount', rowCount);
         };
 
         const loadFromLocalStorage = () => {
-            const savedRows = JSON.parse(localStorage.getItem('rows'));
+            const savedRows = JSON.parse(localStorage.getItem('bankTrackerRows'));
             if (savedRows) {
-                rowCount = parseInt(localStorage.getItem('rowCount'), 10);
+                rowCount = parseInt(localStorage.getItem('bankTrackerRowCount'), 10);
                 const tableBody = document.getElementById('table-body');
                 tableBody.innerHTML = '';
                 savedRows.forEach((row, index) => {
