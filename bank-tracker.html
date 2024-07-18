@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #F7E9EC;
+            background-color: #fff;
             margin: 0;
             padding: 0;
             display: flex;
@@ -344,8 +344,10 @@
             isDarkTheme = !isDarkTheme;
             if (isDarkTheme) {
                 container.classList.add('dark-theme');
+                document.body.style.backgroundColor = "#F7E9EC";
             } else {
                 container.classList.remove('dark-theme');
+                document.body.style.backgroundColor = "#fff";
             }
         });
     </script>
