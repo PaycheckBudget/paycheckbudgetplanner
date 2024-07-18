@@ -205,20 +205,7 @@
                 </tr>
             </thead>
             <tbody id="table-body">
-                <!-- Generate 13 rows dynamically for inputs -->
-                <script>
-                    for (let i = 1; i <= 13; i++) {
-                        document.write(`
-                            <tr id="row-${i}">
-                                <td><input type="date" id="date-${i}"></td>
-                                <td><input type="text" id="description-${i}"></td>
-                                <td><input type="number" class="inflow" id="inflow-${i}"></td>
-                                <td><input type="number" class="outflow" id="outflow-${i}"></td>
-                                <td id="balance-${i}">0</td>
-                            </tr>
-                        `);
-                    }
-                </script>
+                <!-- Generate initial rows dynamically for inputs -->
             </tbody>
             <tfoot>
                 <tr class="totals" id="total-row">
@@ -232,7 +219,7 @@
         <button class="add-row-button" id="add-row-button">Add Row</button>
     </div>
     <script>
-        let rowCount = 13;
+        let rowCount = 0;
 
         const updateTotals = () => {
             let totalInflow = 0;
@@ -251,16 +238,16 @@
             document.getElementById('grand-total').innerText = cumulativeBalance.toFixed(2);
         };
 
-        const addRow = () => {
+        const addRow = (date = '', description = '', inflow = '', outflow = '') => {
             rowCount++;
             const tableBody = document.getElementById('table-body');
             const newRow = document.createElement('tr');
             newRow.id = `row-${rowCount}`;
             newRow.innerHTML = `
-                <td><input type="date" id="date-${rowCount}"></td>
-                <td><input type="text" id="description-${rowCount}"></td>
-                <td><input type="number" class="inflow" id="inflow-${rowCount}"></td>
-                <td><input type="number" class="outflow" id="outflow-${rowCount}"></td>
+                <td><input type="date" id="date-${rowCount}" value="${date}"></td>
+                <td><input type="text" id="description-${rowCount}" value="${description}"></td>
+                <td><input type="number" class="inflow" id="inflow-${rowCount}" value="${inflow}"></td>
+                <td><input type="number" class="outflow" id="outflow-${rowCount}" value="${outflow}"></td>
                 <td id="balance-${rowCount}">0</td>
             `;
             tableBody.appendChild(newRow);
@@ -277,10 +264,6 @@
             setTimeout(() => {
                 button.classList.remove('active');
             }, 300);
-        });
-
-        document.querySelectorAll('.inflow, .outflow').forEach(input => {
-            input.addEventListener('input', updateTotals);
         });
 
         const saveToLocalStorage = () => {
@@ -300,23 +283,14 @@
             const savedRows = JSON.parse(localStorage.getItem('cashTrackerRows'));
             if (savedRows) {
                 rowCount = parseInt(localStorage.getItem('cashTrackerRowCount'), 10);
-                const tableBody = document.getElementById('table-body');
-                tableBody.innerHTML = '';
-                savedRows.forEach((row, index) => {
-                    const newRow = document.createElement('tr');
-                    newRow.id = `row-${index + 1}`;
-                    newRow.innerHTML = `
-                        <td><input type="date" id="date-${index + 1}" value="${row.date}"></td>
-                        <td><input type="text" id="description-${index + 1}" value="${row.description}"></td>
-                        <td><input type="number" class="inflow" id="inflow-${index + 1}" value="${row.inflow}"></td>
-                        <td><input type="number" class="outflow" id="outflow-${index + 1}" value="${row.outflow}"></td>
-                        <td id="balance-${index + 1}">0</td>
-                    `;
-                    tableBody.appendChild(newRow);
+                savedRows.forEach(row => {
+                    addRow(row.date, row.description, row.inflow, row.outflow);
                 });
-                document.querySelectorAll('.inflow, .outflow').forEach(input => {
-                    input.addEventListener('input', updateTotals);
-                });
+                updateTotals();
+            } else {
+                for (let i = 1; i <= 13; i++) {
+                    addRow();
+                }
             }
         };
 
@@ -328,7 +302,6 @@
                     updateTotals();
                 });
             });
-            updateTotals();
         });
 
         const themeButton = document.getElementById('theme-button');
