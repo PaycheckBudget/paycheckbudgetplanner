@@ -431,7 +431,7 @@
         .dropdown-content a:hover {
             background-color: #ddd;
         }
-        .dropdown .dropdown-content.show {
+        .dropdown:hover .dropdown-content {
             display: block;
         }
         .dropbtn {
@@ -469,6 +469,7 @@
                 <a href="subscriptions-tracker.html">Subscriptions Tracker</a>
             </div>
         </div>
+
         <button class="theme-button" id="theme-button">Change Theme</button>
         <div class="subtitle">Grab your favorite drink and plan your paycheck ☕</div>
         <h1>Paycheck Budget Planner</h1>
@@ -836,23 +837,6 @@ updateTotals(); // Initialize totals on page load
 document.getElementById('download-button').addEventListener('click', function() {
 window.location.href = 'https://bossinpajamas.com/b/paycheckbudgetplanner';
 });
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const dropdown = document.querySelector('.dropdown');
-        const dropbtn = dropdown.querySelector('.dropbtn');
-        const dropdownContent = dropdown.querySelector('.dropdown-content');
-
-        dropbtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdownContent.classList.toggle('show');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!dropdown.contains(e.target)) {
-                dropdownContent.classList.remove('show');
-            }
-        });
-    });
 </script>
 </body>
 </html>
