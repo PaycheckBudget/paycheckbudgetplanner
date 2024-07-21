@@ -172,7 +172,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="theme-container">
         <div class="dropdown">
             <button class="dropbtn">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -331,11 +331,17 @@
 
             // Update item column name
             document.getElementById('item-column-name').innerText = itemColumnName;
+
+            // Apply theme from localStorage
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.getElementById('theme-container').classList.add('dark-theme');
+            }
         });
 
         const themeButton = document.getElementById('theme-button');
-        const container = document.querySelector('.container');
-        let isDarkTheme = false;
+        const container = document.getElementById('theme-container');
+        let isDarkTheme = localStorage.getItem('theme') === 'dark';
 
         themeButton.addEventListener('click', () => {
             themeButton.classList.add('active');
@@ -346,10 +352,12 @@
             isDarkTheme = !isDarkTheme;
             if (isDarkTheme) {
                 container.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark');
             } else {
                 container.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light');
             }
         });
-<script>
+    </script>
 </body>
 </html>
