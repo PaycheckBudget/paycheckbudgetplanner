@@ -257,6 +257,34 @@
             document.getElementById('total-inflow').innerText = totalInflow.toFixed(2);
             document.getElementById('total-outflow').innerText = totalOutflow.toFixed(2);
             document.getElementById('grand-total').innerText = cumulativeBalance.toFixed(2);
+            saveTotalsToLocalStorage(totalInflow, totalOutflow, cumulativeBalance);
+        };
+
+        const saveTotalsToLocalStorage = (totalInflow, totalOutflow, grandTotal) => {
+            localStorage.setItem('totalInflow', totalInflow.toFixed(2));
+            localStorage.setItem('totalOutflow', totalOutflow.toFixed(2));
+            localStorage.setItem('grandTotal', grandTotal.toFixed(2));
+        };
+
+        const loadTotalsFromLocalStorage = () => {
+            const totalInflow = localStorage.getItem('totalInflow');
+            const totalOutflow = localStorage.getItem('totalOutflow');
+            const grandTotal = localStorage.getItem('grandTotal');
+
+            if (totalInflow && totalOutflow && grandTotal) {
+                document.getElementById('total-inflow').innerText = totalInflow;
+                document.getElementById('total-outflow').innerText = totalOutflow;
+                document.getElementById('grand-total').innerText = grandTotal;
+
+                const balances = document.querySelectorAll('[id^="balance-"]');
+                let cumulativeBalance = 0;
+                for (let i = 0; i < balances.length; i++) {
+                    const inflow = parseFloat(document.getElementById(`inflow-${i + 1}`).value) || 0;
+                    const outflow = parseFloat(document.getElementById(`outflow-${i + 1}`).value) || 0;
+                    cumulativeBalance += inflow - outflow;
+                    balances[i].innerText = cumulativeBalance.toFixed(2);
+                }
+            }
         };
 
         const addRow = (date = '', description = '', inflow = '', outflow = '') => {
@@ -321,6 +349,7 @@
                 document.querySelectorAll('.inflow, .outflow').forEach(input => {
                     input.addEventListener('input', updateTotals);
                 });
+                loadTotalsFromLocalStorage();
             } else {
                 for (let i = 1; i <= 13; i++) {
                     addRow();
