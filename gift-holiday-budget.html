@@ -251,6 +251,7 @@
             document.getElementById('total-budget').innerText = totalBudget.toFixed(2);
             document.getElementById('total-actual').innerText = totalActual.toFixed(2);
             document.getElementById('total-remaining').innerText = totalRemaining.toFixed(2);
+            saveToLocalStorage();
         };
 
         const addRow = () => {
