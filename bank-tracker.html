@@ -331,7 +331,17 @@
 
         const themeButton = document.getElementById('theme-button');
         const container = document.querySelector('.container');
-        let isDarkTheme = false;
+        let isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
+
+        const applyTheme = (isDark) => {
+            if (isDark) {
+                container.classList.add('dark-theme');
+                document.body.style.backgroundColor = "#F7E9EC";
+            } else {
+                container.classList.remove('dark-theme');
+                document.body.style.backgroundColor = "#fff";
+            }
+        };
 
         themeButton.addEventListener('click', () => {
             themeButton.classList.add('active');
@@ -340,14 +350,11 @@
             }, 300);
 
             isDarkTheme = !isDarkTheme;
-            if (isDarkTheme) {
-                container.classList.add('dark-theme');
-                document.body.style.backgroundColor = "#F7E9EC";
-            } else {
-                container.classList.remove('dark-theme');
-                document.body.style.backgroundColor = "#fff";
-            }
+            localStorage.setItem('isDarkTheme', isDarkTheme);
+            applyTheme(isDarkTheme);
         });
-<script>
+
+        applyTheme(isDarkTheme); // Apply the saved theme on load
+    </script>
 </body>
 </html>
