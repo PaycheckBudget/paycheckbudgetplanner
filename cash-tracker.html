@@ -302,6 +302,7 @@
             tableBody.appendChild(newRow);
             document.querySelectorAll('.inflow, .outflow').forEach(input => {
                 input.addEventListener('input', updateTotals);
+                input.addEventListener('input', saveToLocalStorage);
             });
             saveToLocalStorage();
         };
@@ -348,6 +349,7 @@
                 });
                 document.querySelectorAll('.inflow, .outflow').forEach(input => {
                     input.addEventListener('input', updateTotals);
+                    input.addEventListener('input', saveToLocalStorage);
                 });
                 loadTotalsFromLocalStorage();
             } else {
