@@ -302,6 +302,7 @@
                 }
             });
             localStorage.setItem('subscriptionRows', JSON.stringify(rows));
+            localStorage.setItem('isDarkTheme', JSON.stringify(isDarkTheme));
         };
 
         const loadFromLocalStorage = () => {
@@ -314,6 +315,13 @@
                 document.getElementById(`date-${index + 1}`).value = row.date;
                 document.getElementById(`amount-${index + 1}`).value = row.amount;
             });
+
+            const savedTheme = localStorage.getItem('isDarkTheme');
+            if (savedTheme !== null) {
+                isDarkTheme = JSON.parse(savedTheme);
+                applyTheme(isDarkTheme);
+            }
+
             updateTotals();
         };
 
@@ -364,6 +372,16 @@
         const container = document.querySelector('.container');
         let isDarkTheme = false;
 
+        const applyTheme = (isDark) => {
+            if (isDark) {
+                container.classList.add('dark-theme');
+                body.style.backgroundColor = "#F7E9EC";
+            } else {
+                container.classList.remove('dark-theme');
+                body.style.backgroundColor = "#fff";
+            }
+        };
+
         themeButton.addEventListener('click', () => {
             themeButton.classList.add('active');
             setTimeout(() => {
@@ -371,14 +389,17 @@
             }, 300);
 
             isDarkTheme = !isDarkTheme;
-            if (isDarkTheme) {
-                container.classList.add('dark-theme');
-                body.style.backgroundColor = "#F7E9EC";
-            } else {
-                container.classList.remove('dark-theme');
-                body.style.backgroundColor = "#fff";
-            }
+            applyTheme(isDarkTheme);
+            saveToLocalStorage();
         });
-<script>
+
+        // Apply the saved theme on page load
+        const savedTheme = localStorage.getItem('isDarkTheme');
+        if (savedTheme !== null) {
+            isDarkTheme = JSON.parse(savedTheme);
+            applyTheme(isDarkTheme);
+        }
+
+    </script>
 </body>
 </html>
