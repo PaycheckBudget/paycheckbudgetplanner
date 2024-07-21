@@ -250,6 +250,7 @@
             document.getElementById('total-inflow').innerText = totalInflow.toFixed(2);
             document.getElementById('total-outflow').innerText = totalOutflow.toFixed(2);
             document.getElementById('grand-total').innerText = cumulativeBalance.toFixed(2);
+            saveToLocalStorage();
         };
 
         const addRow = () => {
@@ -265,24 +266,10 @@
                 <td id="balance-${rowCount}">0</td>
             `;
             tableBody.appendChild(newRow);
-            document.querySelectorAll('.inflow, .outflow').forEach(input => {
-                input.addEventListener('input', updateTotals);
-            });
+            document.getElementById(`inflow-${rowCount}`).addEventListener('input', updateTotals);
+            document.getElementById(`outflow-${rowCount}`).addEventListener('input', updateTotals);
             saveToLocalStorage();
         };
-
-        document.getElementById('add-row-button').addEventListener('click', () => {
-            addRow();
-            const button = document.getElementById('add-row-button');
-            button.classList.add('active');
-            setTimeout(() => {
-                button.classList.remove('active');
-            }, 300);
-        });
-
-        document.querySelectorAll('.inflow, .outflow').forEach(input => {
-            input.addEventListener('input', updateTotals);
-        });
 
         const saveToLocalStorage = () => {
             const rows = [];
@@ -300,7 +287,7 @@
         const loadFromLocalStorage = () => {
             const savedRows = JSON.parse(localStorage.getItem('bankTrackerRows'));
             if (savedRows) {
-                rowCount = parseInt(localStorage.getItem('bankTrackerRowCount'), 10);
+                rowCount = parseInt(localStorage.getItem('bankTrackerRowCount'), 10) || 13;
                 const tableBody = document.getElementById('table-body');
                 tableBody.innerHTML = '';
                 savedRows.forEach((row, index) => {
@@ -318,6 +305,7 @@
                 document.querySelectorAll('.inflow, .outflow').forEach(input => {
                     input.addEventListener('input', updateTotals);
                 });
+                updateTotals();
             }
         };
 
@@ -328,6 +316,14 @@
                     saveToLocalStorage();
                     updateTotals();
                 });
+            });
+            document.getElementById('add-row-button').addEventListener('click', () => {
+                addRow();
+                const button = document.getElementById('add-row-button');
+                button.classList.add('active');
+                setTimeout(() => {
+                    button.classList.remove('active');
+                }, 300);
             });
             updateTotals();
         });
