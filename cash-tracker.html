@@ -367,6 +367,12 @@
                     updateTotals();
                 });
             });
+
+            // Load theme preference
+            const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
+            if (isDarkTheme) {
+                container.classList.add('dark-theme');
+            }
         });
 
         const themeButton = document.getElementById('theme-button');
@@ -385,7 +391,8 @@
             } else {
                 container.classList.remove('dark-theme');
             }
+            localStorage.setItem('isDarkTheme', isDarkTheme);
         });
-<script>
+    </script>
 </body>
 </html>
