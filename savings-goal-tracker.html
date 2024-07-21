@@ -297,6 +297,11 @@
                     saveToLocalStorage();
                 });
             });
+            document.querySelectorAll(`#target-date-${rowCount}`).forEach(input => {
+                input.addEventListener('change', () => {
+                    saveToLocalStorage();
+                });
+            });
             saveToLocalStorage();
         };
 
@@ -318,7 +323,24 @@
                     updateTotals();
                 });
             });
+            document.querySelectorAll('input[type="date"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    saveToLocalStorage();
+                });
+            });
             updateTotals();
+
+            // Load the theme from local storage
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme === 'dark') {
+                isDarkTheme = true;
+                container.classList.add('dark-theme');
+                body.style.backgroundColor = "#F7E9EC";
+            } else {
+                isDarkTheme = false;
+                container.classList.remove('dark-theme');
+                body.style.backgroundColor = "#fff";
+            }
         });
 
         const themeButton = document.getElementById('theme-button');
@@ -336,11 +358,13 @@
             if (isDarkTheme) {
                 container.classList.add('dark-theme');
                 body.style.backgroundColor = "#F7E9EC";
+                localStorage.setItem('theme', 'dark');
             } else {
                 container.classList.remove('dark-theme');
                 body.style.backgroundColor = "#fff";
+                localStorage.setItem('theme', 'light');
             }
         });
-<script>
+    </script>
 </body>
 </html>
