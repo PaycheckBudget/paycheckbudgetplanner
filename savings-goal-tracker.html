@@ -202,7 +202,7 @@
                 </tr>
             </thead>
             <tbody id="goal-table-body">
-                <!-- Rows will be generated here by JavaScript -->
+                <!-- Generate 13 rows dynamically for inputs -->
                 <tr class="totals">
                     <td>Total</td>
                     <td id="total-target-amount">0</td>
@@ -215,7 +215,7 @@
         <button class="add-row-button" id="add-row-button">Add Row</button>
     </div>
     <script>
-        let rowCount = 8; // Initial row count
+        let rowCount = 13; // Initial row count
 
         const updateTotals = () => {
             let totalTargetAmount = 0;
@@ -292,7 +292,10 @@
             `;
             tbody.insertBefore(row, document.querySelector('.totals'));
             document.querySelectorAll('.target-amount, .current-balance, .monthly-contribution').forEach(input => {
-                input.addEventListener('input', updateTotals);
+                input.addEventListener('input', () => {
+                    updateTotals();
+                    saveToLocalStorage();
+                });
             });
             saveToLocalStorage();
         };
