@@ -779,23 +779,29 @@ const container = document.querySelector('.container');
 let isDarkTheme = false;
 
 themeButton.addEventListener('click', () => {
-themeButton.classList.add('active');
-setTimeout(() => {
-themeButton.classList.remove('active');
-}, 300); // 300ms matches the duration of the animation
+    themeButton.classList.add('active');
+    setTimeout(() => {
+        themeButton.classList.remove('active');
+    }, 300); // 300ms matches the duration of the animation
 
-isDarkTheme = !isDarkTheme;
-if (isDarkTheme) {
-container.classList.add('dark-theme');
-budgetChart.data.datasets[0].backgroundColor = budgetChartColors.dark;
-budgetChart.data.datasets[0].borderColor = budgetChartColors.dark;
-} else {
-container.classList.remove('dark-theme');
-budgetChart.data.datasets[0].backgroundColor = budgetChartColors.light;
-budgetChart.data.datasets[0].borderColor = budgetChartColors.light;
-}
-budgetChart.update();
+    isDarkTheme = !isDarkTheme;
+    localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
+    applyTheme();
 });
+
+function applyTheme() {
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme === 'dark') {
+        container.classList.add('dark-theme');
+        budgetChart.data.datasets[0].backgroundColor = budgetChartColors.dark;
+        budgetChart.data.datasets[0].borderColor = budgetChartColors.dark;
+    } else {
+        container.classList.remove('dark-theme');
+        budgetChart.data.datasets[0].backgroundColor = budgetChartColors.light;
+        budgetChart.data.datasets[0].borderColor = budgetChartColors.light;
+    }
+    budgetChart.update();
+}
 
 // Initialize totals on page load
 updateTotals();
@@ -820,17 +826,18 @@ input.value = localStorage.getItem(input.id);
 
 // Save inputs on change
 document.addEventListener('DOMContentLoaded', () => {
-loadFromLocalStorage();  // Load saved data on page load
+    applyTheme(); // Apply saved theme on page load
+    loadFromLocalStorage();  // Load saved data on page load
 
-const inputs = document.querySelectorAll('input');
-inputs.forEach(input => {
-input.addEventListener('input', () => {
-saveToLocalStorage();
-updateTotals();
-});
-});
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            saveToLocalStorage();
+            updateTotals();
+        });
+    });
 
-updateTotals(); // Initialize totals on page load
+    updateTotals(); // Initialize totals on page load
 });
 </script>
 <script>
@@ -840,4 +847,3 @@ window.location.href = 'https://bossinpajamas.com/b/paycheckbudgetplanner';
     </script>
 </body>
 </html>
-
