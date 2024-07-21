@@ -265,6 +265,11 @@
                     <td><input type="date" id="date-12"></td>
                     <td><input type="number" class="amount" id="amount-12"></td>
                 </tr>
+                <tr>
+                    <td><input type="text" id="service-13" placeholder="Service"></td>
+                    <td><input type="date" id="date-13"></td>
+                    <td><input type="number" class="amount" id="amount-13"></td>
+                </tr>
                 <tr class="totals">
                     <td colspan="2">Total</td>
                     <td id="grand-total">0</td>
@@ -274,7 +279,7 @@
         <button class="add-row-button" id="add-row-button">Add Row</button>
     </div>
     <script>
-        let rowCount = 12;
+        let rowCount = 13;
 
         const updateTotals = () => {
             let total = 0;
@@ -284,43 +289,16 @@
             document.getElementById('grand-total').innerText = total.toFixed(2);
         };
 
-        document.querySelectorAll('.amount').forEach(input => {
-            input.addEventListener('input', updateTotals);
-        });
-
-        const addRow = () => {
-            rowCount++;
-            const tableBody = document.querySelector('#table-body');
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td><input type="text" id="service-${rowCount}" placeholder="Service"></td>
-                <td><input type="date" id="date-${rowCount}"></td>
-                <td><input type="number" class="amount" id="amount-${rowCount}"></td>
-            `;
-            tableBody.insertBefore(newRow, document.querySelector('.totals'));
-            document.querySelectorAll('.amount').forEach(input => {
-                input.addEventListener('input', updateTotals);
-            });
-            saveToLocalStorage();
-        };
-
-        document.getElementById('add-row-button').addEventListener('click', () => {
-            addRow();
-            const button = document.getElementById('add-row-button');
-            button.classList.add('active');
-            setTimeout(() => {
-                button.classList.remove('active');
-            }, 300);
-        });
-
         const saveToLocalStorage = () => {
             const rows = [];
-            document.querySelectorAll('#table-body tr').forEach(row => {
-                const service = row.querySelector('input[type="text"]')?.value || '';
-                const date = row.querySelector('input[type="date"]')?.value || '';
-                const amount = row.querySelector('input[type="number"]')?.value || '';
-                if (service || date || amount) {
-                    rows.push({ service, date, amount });
+            document.querySelectorAll('#table-body tr').forEach((row, index) => {
+                if (index < rowCount) {  // skip the totals row
+                    const service = row.querySelector('input[type="text"]')?.value || '';
+                    const date = row.querySelector('input[type="date"]')?.value || '';
+                    const amount = row.querySelector('input[type="number"]')?.value || '';
+                    if (service || date || amount) {
+                        rows.push({ service, date, amount });
+                    }
                 }
             });
             localStorage.setItem('subscriptionRows', JSON.stringify(rows));
@@ -338,6 +316,37 @@
             });
             updateTotals();
         };
+
+        const addRow = () => {
+            rowCount++;
+            const tableBody = document.querySelector('#table-body');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" id="service-${rowCount}" placeholder="Service"></td>
+                <td><input type="date" id="date-${rowCount}"></td>
+                <td><input type="number" class="amount" id="amount-${rowCount}"></td>
+            `;
+            tableBody.insertBefore(newRow, document.querySelector('.totals'));
+            
+            // Add event listener to new row inputs
+            newRow.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', () => {
+                    saveToLocalStorage();
+                    updateTotals();
+                });
+            });
+            
+            saveToLocalStorage();
+        };
+
+        document.getElementById('add-row-button').addEventListener('click', () => {
+            addRow();
+            const button = document.getElementById('add-row-button');
+            button.classList.add('active');
+            setTimeout(() => {
+                button.classList.remove('active');
+            }, 300);
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             loadFromLocalStorage();
