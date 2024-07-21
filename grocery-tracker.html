@@ -257,7 +257,10 @@
             `;
             tableBody.appendChild(newRow);
             document.querySelectorAll('.quantity, .price-per-unit').forEach(input => {
-                input.addEventListener('input', updateTotals);
+                input.addEventListener('input', () => {
+                    updateTotals();
+                    saveToLocalStorage();
+                });
             });
             saveToLocalStorage();
         };
@@ -272,7 +275,10 @@
         });
 
         document.querySelectorAll('.quantity, .price-per-unit').forEach(input => {
-            input.addEventListener('input', updateTotals);
+            input.addEventListener('input', () => {
+                updateTotals();
+                saveToLocalStorage();
+            });
         });
 
         const saveToLocalStorage = () => {
@@ -305,7 +311,10 @@
                     tableBody.appendChild(newRow);
                 });
                 document.querySelectorAll('.quantity, .price-per-unit').forEach(input => {
-                    input.addEventListener('input', updateTotals);
+                    input.addEventListener('input', () => {
+                        updateTotals();
+                        saveToLocalStorage();
+                    });
                 });
             }
             updateTotals();
