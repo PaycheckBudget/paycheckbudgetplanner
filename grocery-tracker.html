@@ -67,12 +67,13 @@
             border: 1px solid #ddd;
         }
         th, td {
-            padding: 10px;
+            padding: 5px; /* Reduced padding to make rows smaller */
             text-align: center;
             font-size: 0.8em;
             border: 0.5px solid #ddd;
         }
         th {
+            padding: 10px; /* Larger padding for header */
             font-size: 1em;
             border: none;
             background-color: #F5ED6F;
@@ -169,6 +170,29 @@
             padding: 8px;
             color: black; /* Ensure SVG button color stays black */
         }
+        /* Drag and Drop Styles */
+        .drop-zone {
+            width: 100%;
+            height: 30px; /* Adjust the height to match other cells */
+            border: none; /* Remove gray border */
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: #fff; /* Background color for light theme */
+            position: relative;
+        }
+        .drop-zone input[type="file"] {
+            display: none;
+        }
+        .dark-theme .drop-zone {
+            background-color: #F7F3F3; /* Background color for dark theme */
+        }
+        .drop-zone img {
+            max-width: 30px; /* Adjust the image size */
+            max-height: 30px; /* Adjust the image size */
+        }
     </style>
 </head>
 <body>
@@ -197,6 +221,7 @@
         <table id="grocery-table">
             <thead>
                 <tr>
+                    <th>STORE</th>
                     <th id="item-column-name">ITEM</th>
                     <th>QUANTITY</th>
                     <th>PRICE PER UNIT ($)</th>
@@ -211,9 +236,13 @@
                     for (let i = 1; i <= 13; i++) {
                         document.write(`
                             <tr id="row-${i}">
+                                <td><div class="drop-zone" id="drop-zone-${i}" onclick="document.getElementById('file-input-${i}').click()" ondrop="drop(event, ${i})" ondragover="allowDrop(event)">
+                                    <input type="file" id="file-input-${i}" onchange="loadFile(event, ${i})">
+                                    <img id="logo-${i}" src="" alt="">
+                                </div></td>
                                 <td><input type="text" id="item-${i}" placeholder="${itemColumnName}"></td>
-                                <td><input type="number" class="quantity" id="quantity-${i}" min="0" value="0"></td>
-                                <td><input type="number" class="price-per-unit" id="price-per-unit-${i}" min="0" step="0.01" value="0.00"></td>
+                                <td><input type="number" class="quantity" id="quantity-${i}" min="0" placeholder="0"></td>
+                                <td><input type="number" class="price-per-unit" id="price-per-unit-${i}" min="0" step="0.01" placeholder="0.00"></td>
                                 <td id="total-cost-${i}">0.00</td>
                             </tr>
                         `);
@@ -222,7 +251,7 @@
             </tbody>
             <tfoot>
                 <tr class="totals" id="total-row">
-                    <td colspan="3">Total</td>
+                    <td colspan="4">Total</td>
                     <td id="grand-total">0.00</td>
                 </tr>
             </tfoot>
@@ -250,9 +279,13 @@
             const newRow = document.createElement('tr');
             newRow.id = `row-${rowCount}`;
             newRow.innerHTML = `
+                <td><div class="drop-zone" id="drop-zone-${rowCount}" onclick="document.getElementById('file-input-${rowCount}').click()" ondrop="drop(event, ${rowCount})" ondragover="allowDrop(event)">
+                    <input type="file" id="file-input-${rowCount}" onchange="loadFile(event, ${rowCount})">
+                    <img id="logo-${rowCount}" src="" alt="">
+                </div></td>
                 <td><input type="text" id="item-${rowCount}" placeholder="${itemColumnName}"></td>
-                <td><input type="number" class="quantity" id="quantity-${rowCount}" min="0" value="0"></td>
-                <td><input type="number" class="price-per-unit" id="price-per-unit-${rowCount}" min="0" step="0.01" value="0.00"></td>
+                <td><input type="number" class="quantity" id="quantity-${rowCount}" min="0" placeholder="0"></td>
+                <td><input type="number" class="price-per-unit" id="price-per-unit-${rowCount}" min="0" step="0.01" placeholder="0.00"></td>
                 <td id="total-cost-${rowCount}">0.00</td>
             `;
             tableBody.appendChild(newRow);
@@ -287,7 +320,8 @@
                 const item = document.getElementById(`item-${i}`).value || '';
                 const quantity = document.getElementById(`quantity-${i}`).value || 0;
                 const pricePerUnit = document.getElementById(`price-per-unit-${i}`).value || 0.00;
-                rows.push({ item, quantity, pricePerUnit });
+                const logoSrc = document.getElementById(`logo-${i}`).src || '';
+                rows.push({ item, quantity, pricePerUnit, logoSrc });
             }
             localStorage.setItem('rows', JSON.stringify(rows));
             localStorage.setItem('rowCount', rowCount);
@@ -303,9 +337,13 @@
                     const newRow = document.createElement('tr');
                     newRow.id = `row-${index + 1}`;
                     newRow.innerHTML = `
+                        <td><div class="drop-zone" id="drop-zone-${index + 1}" onclick="document.getElementById('file-input-${index + 1}').click()" ondrop="drop(event, ${index + 1})" ondragover="allowDrop(event)">
+                            <input type="file" id="file-input-${index + 1}" onchange="loadFile(event, ${index + 1})">
+                            <img id="logo-${index + 1}" src="${row.logoSrc}" alt="">
+                        </div></td>
                         <td><input type="text" id="item-${index + 1}" value="${row.item}" placeholder="${itemColumnName}"></td>
-                        <td><input type="number" class="quantity" id="quantity-${index + 1}" value="${row.quantity}" min="0"></td>
-                        <td><input type="number" class="price-per-unit" id="price-per-unit-${index + 1}" value="${row.pricePerUnit}" min="0" step="0.01"></td>
+                        <td><input type="number" class="quantity" id="quantity-${index + 1}" value="${row.quantity}" min="0" placeholder="0"></td>
+                        <td><input type="number" class="price-per-unit" id="price-per-unit-${index + 1}" value="${row.pricePerUnit}" min="0" step="0.01" placeholder="0.00"></td>
                         <td id="total-cost-${index + 1}">0.00</td>
                     `;
                     tableBody.appendChild(newRow);
@@ -358,6 +396,33 @@
                 localStorage.setItem('theme', 'light');
             }
         });
+
+        // Drag and Drop Functions
+        const allowDrop = (event) => {
+            event.preventDefault();
+        };
+
+        const drop = (event, rowIndex) => {
+            event.preventDefault();
+            const file = event.dataTransfer.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById(`logo-${rowIndex}`).src = e.target.result;
+                saveToLocalStorage();
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // Load File Function
+        const loadFile = (event, rowIndex) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById(`logo-${rowIndex}`).src = e.target.result;
+                saveToLocalStorage();
+            };
+            reader.readAsDataURL(file);
+        };
     </script>
 </body>
 </html>
