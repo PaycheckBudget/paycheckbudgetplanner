@@ -193,6 +193,9 @@
             max-width: 30px; /* Adjust the image size */
             max-height: 30px; /* Adjust the image size */
         }
+        .draggable-row {
+            cursor: move;
+        }
     </style>
 </head>
 <body>
@@ -235,7 +238,7 @@
 
                     for (let i = 1; i <= 13; i++) {
                         document.write(`
-                            <tr id="row-${i}">
+                            <tr id="row-${i}" class="draggable-row" draggable="true" ondragstart="drag(event)" ondrop="dropRow(event)" ondragover="allowRowDrop(event)">
                                 <td><div class="drop-zone" id="drop-zone-${i}" onclick="document.getElementById('file-input-${i}').click()" ondrop="drop(event, ${i})" ondragover="allowDrop(event)">
                                     <input type="file" id="file-input-${i}" onchange="loadFile(event, ${i})">
                                     <img id="logo-${i}" src="" alt="">
@@ -278,6 +281,11 @@
             const tableBody = document.getElementById('table-body');
             const newRow = document.createElement('tr');
             newRow.id = `row-${rowCount}`;
+            newRow.classList.add('draggable-row');
+            newRow.setAttribute('draggable', 'true');
+            newRow.setAttribute('ondragstart', 'drag(event)');
+            newRow.setAttribute('ondrop', 'dropRow(event)');
+            newRow.setAttribute('ondragover', 'allowRowDrop(event)');
             newRow.innerHTML = `
                 <td><div class="drop-zone" id="drop-zone-${rowCount}" onclick="document.getElementById('file-input-${rowCount}').click()" ondrop="drop(event, ${rowCount})" ondragover="allowDrop(event)">
                     <input type="file" id="file-input-${rowCount}" onchange="loadFile(event, ${rowCount})">
@@ -336,6 +344,11 @@
                 savedRows.forEach((row, index) => {
                     const newRow = document.createElement('tr');
                     newRow.id = `row-${index + 1}`;
+                    newRow.classList.add('draggable-row');
+                    newRow.setAttribute('draggable', 'true');
+                    newRow.setAttribute('ondragstart', 'drag(event)');
+                    newRow.setAttribute('ondrop', 'dropRow(event)');
+                    newRow.setAttribute('ondragover', 'allowRowDrop(event)');
                     newRow.innerHTML = `
                         <td><div class="drop-zone" id="drop-zone-${index + 1}" onclick="document.getElementById('file-input-${index + 1}').click()" ondrop="drop(event, ${index + 1})" ondragover="allowDrop(event)">
                             <input type="file" id="file-input-${index + 1}" onchange="loadFile(event, ${index + 1})">
@@ -397,7 +410,7 @@
             }
         });
 
-        // Drag and Drop Functions
+        // Drag and Drop Functions for Images
         const allowDrop = (event) => {
             event.preventDefault();
         };
@@ -422,6 +435,36 @@
                 saveToLocalStorage();
             };
             reader.readAsDataURL(file);
+        };
+
+        // Drag and Drop Functions for Rows
+        let draggedRow = null;
+
+        const drag = (event) => {
+            draggedRow = event.target;
+            event.dataTransfer.effectAllowed = "move";
+        };
+
+        const allowRowDrop = (event) => {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "move";
+        };
+
+        const dropRow = (event) => {
+            event.preventDefault();
+            const targetRow = event.target.closest('tr');
+            if (draggedRow && targetRow && draggedRow !== targetRow) {
+                const tableBody = document.getElementById('table-body');
+                const draggedIndex = [...tableBody.children].indexOf(draggedRow);
+                const targetIndex = [...tableBody.children].indexOf(targetRow);
+                if (draggedIndex > targetIndex) {
+                    tableBody.insertBefore(draggedRow, targetRow);
+                } else {
+                    tableBody.insertBefore(draggedRow, targetRow.nextSibling);
+                }
+                saveToLocalStorage();
+            }
+            draggedRow = null;
         };
     </script>
 </body>
