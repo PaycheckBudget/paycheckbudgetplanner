@@ -35,11 +35,14 @@
         <textarea id="product-description" placeholder="Product Description"></textarea>
         <input type="text" id="product-image" placeholder="Product Image URL">
         <input type="email" id="paypal-email" placeholder="Your PayPal Email">
-        <button onclick="generateLandingPage()">Generate Landing Page</button>
+        <button onclick="generateAndHostLandingPage()">Get the Link of Your Product Landing Page</button>
     </div>
     <div id="generated-links"></div>
 
     <script>
+        const clientId = 'YOUR_GITHUB_CLIENT_ID'; // Replace with your GitHub OAuth App Client ID
+        const redirectUri = 'YOUR_REDIRECT_URI'; // Replace with your GitHub OAuth Redirect URI
+
         async function validateImageUrl(url) {
             try {
                 const response = await fetch(url);
@@ -54,7 +57,77 @@
             }
         }
 
-        async function generateLandingPage() {
+        function redirectToGitHubOAuth() {
+            const oauthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=repo&redirect_uri=${encodeURIComponent(redirectUri)}`;
+            window.location.href = oauthUrl;
+        }
+
+        async function getGitHubAccessToken(code) {
+            const response = await fetch('https://github.com/login/oauth/access_token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    client_id: clientId,
+                    client_secret: 'YOUR_CLIENT_SECRET', // Replace with your GitHub OAuth App Client Secret
+                    code: code,
+                    redirect_uri: redirectUri
+                })
+            });
+            const data = await response.json();
+            return data.access_token;
+        }
+
+        async function createGitHubRepo(token, repoName) {
+            const response = await fetch('https://api.github.com/user/repos', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: repoName,
+                    auto_init: true
+                })
+            });
+            return response.json();
+        }
+
+        async function uploadFileToGitHub(token, repoName, filePath, content) {
+            const response = await fetch(`https://api.github.com/repos/YOUR_USERNAME/${repoName}/contents/${filePath}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: 'Adding landing page',
+                    content: btoa(content)
+                })
+            });
+            return response.json();
+        }
+
+        async function enableGitHubPages(token, repoName) {
+            const response = await fetch(`https://api.github.com/repos/YOUR_USERNAME/${repoName}/pages`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    source: {
+                        branch: 'main',
+                        path: '/'
+                    }
+                })
+            });
+            return `https://YOUR_USERNAME.github.io/${repoName}`;
+        }
+
+        async function generateAndHostLandingPage() {
             const name = document.getElementById('product-name').value;
             const price = document.getElementById('product-price').value;
             const description = document.getElementById('product-description').value;
@@ -116,25 +189,34 @@
                         </html>
                     `;
 
-                    const blob = new Blob([landingPageHtml], { type: 'text/html' });
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = `${name.replace(/\s+/g, '-').toLowerCase()}-landing-page.html`;
-                    link.innerText = `Download landing page for ${name}`;
-                    link.className = 'product-link';
+                    // Step 1: Redirect to GitHub OAuth for authentication
+                    redirectToGitHubOAuth();
 
-                    const linksContainer = document.getElementById('generated-links');
-                    linksContainer.appendChild(link);
+                    // Step 2: After redirect, GitHub will provide a code in the URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const code = urlParams.get('code');
 
-                    // Clear input fields
-                    document.getElementById('product-name').value = '';
-                    document.getElementById('product-price').value = '';
-                    document.getElementById('product-description').value = '';
-                    document.getElementById('product-image').value = '';
-                    document.getElementById('paypal-email').value = '';
+                    if (code) {
+                        // Step 3: Exchange the code for an access token
+                        const token = await getGitHubAccessToken(code);
+
+                        // Step 4: Create a new repository
+                        const repoName = `${name.replace(/\s+/g, '-').toLowerCase()}-landing-page`;
+                        const repo = await createGitHubRepo(token, repoName);
+
+                        // Step 5: Upload the landing page HTML
+                        await uploadFileToGitHub(token, repoName, 'index.html', landingPageHtml);
+
+                        // Step 6: Enable GitHub Pages
+                        const pageUrl = await enableGitHubPages(token, repoName);
+
+                        // Display the link to the hosted page
+                        const linkContainer = document.getElementById('generated-links');
+                        linkContainer.innerHTML = `<a href="${pageUrl}" target="_blank">Visit your product landing page</a>`;
+                    }
+
                 } catch (error) {
-                    console.error('Error generating landing page:', error);
+                    console.error('Error generating and hosting landing page:', error);
                 }
             } else {
                 alert('Please enter all product details, including your PayPal email.');
