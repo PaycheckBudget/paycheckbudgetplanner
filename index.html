@@ -3,847 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paycheck Budget Planner</title>
-    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <title>Product Landing Page Generator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            width: 100%;
-            background-color: #fff;
-            padding: 100px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin: 0px 0;
-        }
-        .theme-button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            border: none;
-            border-radius: 15px;
-            background-color: #000;
-            color: #fff;
-        }
-        h1 {
-            text-align: center;
-            font-family: 'Patrick Hand', cursive;
-            font-size: 3.5em;
-            margin-bottom: 60px;
-        }
-        .subtitle {
-            text-align: center;
-            font-family: 'Patrick Hand', cursive;
-            font-size: 1em;
-            margin-bottom: 20px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .header-item {
-            width: 30%;
-            padding: 0;
-        }
-        .header-item-title {
-            padding: 10px;
-            text-align: center;
-            background-color: #BEDA8D;
-            font-weight: bold;
-        }
-        .header-item-input {
-            padding: 10px;
-            text-align: center;
-            background-color: #DCEDBF;
-        }
-        .header-item:nth-child(2) .header-item-title {
-            background-color: #F5ED6F;
-        }
-        .header-item:nth-child(2) .header-item-input {
-            background-color: #FFFCCB;
-        }
-        .header-item:nth-child(3) .header-item-title {
-            background-color: #F78BBF;
-        }
-        .header-item:nth-child(3) .header-item-input {
-            background-color: #FFE0EF;
-        }
-        .header-item-input input {
-            background: none;
-            border: none;
-            width: 100%;
-            text-align: center;
-            font-size: 16px;
-        }
-        .header-item-input input:focus {
-            outline: none;
-        }
-        .tables-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        .table-wrapper {
-            width: 48%;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            font-size: 0.8em;
-            border: 0.5px solid #ddd;
         }
 
-        table th, table td {
-            text-align: center;
+        #product-form {
+            margin-bottom: 20px;
         }
 
-        table .totals td {
-            text-align: center;
-        }
-
-        th {
-            font-size: 1em;
-            border: none;
-        }
-        .income-header {
-            background-color: #BEDA8D;
-        }
-        .savings-header {
-            background-color: #F5ED6F;
-        }
-        .bills-header {
-            background-color: #FABAD1;
-        }
-        .expenses-header {
-            background-color: #EBC7E4;
-        }
-        .debt-header {
-            background-color: #F4C8CC;
-        }
-        .summary-header {
-            background-color: #9EDDE9;
-        }
-        .totals {
-            font-weight: bold;
-        }
-        .chart-buttons-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+        #generated-links {
             margin-top: 20px;
         }
-        .chart-container {
-            width: 55%;
-        }
-        canvas {
-            max-width: 100%;
-            height: 300px !important;
-        }
-        .buttons-container {
-            width: 35%;
-            text-align: left;
-            padding-left: 10px;
-        }
-        .buttons-container p {
+
+        .product-link {
             margin-bottom: 10px;
-        }
-        .download, .buy-coffee {
-            padding: 10px 20px;
-            font-size: 0.9em;
-            margin: 5px;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-        }
-        .download {
-            width: 200px;
-            padding: 10px 20px;
-            font-size: 0.9em;
-            background-color: #A6F186;
-            color: black;
-            margin: 5px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        .buy-coffee {
-            width: 200px;
-            padding: 10px 20px;
-            font-size: 0.9em;
-            background-color: #38B6FF;
-            color: white;
-            margin: 5px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        .toggle-buttons-container {
-            margin-top: 10px;
-            display: flex;
-            justify-content: flex-start;
-        }
-        .toggle-button {
-            padding: 5px 61px;
-            font-size: 0.6em;
-            border: 1px solid #000;
-            cursor: pointer;
-            background-color: white;
-            color: black;
-            border-radius: 15px;
-        }
-        .toggle-button + .toggle-button {
-            border-left: none;
-        }
-        input[type="number"], input[type="text"] {
-            width: 100%;
-            border: none;
-            text-align: center;
-            padding: 0;
-            margin: 0;
-            font-size: 16px;
-        }
-        input[type="number"]:focus, input[type="text"]:focus {
-            outline: none;
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            .header {
-                flex-direction: column;
-            }
-            .header-item {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            .tables-container {
-                flex-direction: column;
-            }
-            .table-wrapper {
-                width: 100%;
-            }
-            h1 {
-                font-size: 2em;
-                font-family: 'Patrick Hand', cursive;
-                order: 2;
-            }
-            .subtitle {
-                font-size: 0.9em;
-                font-family: 'Patrick Hand', cursive;
-                order: 1;
-            }
-            .toggle-buttons-container {
-                flex-direction: row;
-                justify-content: center;
-                order: 3;
-            }
-            .chart-buttons-container {
-                flex-direction: column;
-                order: 4;
-            }
-            .chart-container {
-                order: 5;
-                width: 100%;
-                margin-bottom: 20px;
-            }
-            .buttons-container {
-                order: 6;
-                width: 100%;
-                margin-bottom: 20px;
-            }
-            .download, .buy-coffee {
-                order: 7;
-            }
-            .header {
-                order: 8;
-            }
-            #paycheck-amount {
-                order: 9;
-            }
-            #paycheck-date {
-                order: 10;
-            }
-            #paycheck-period {
-                order: 11;
-            }
-            #income-table {
-                order: 12;
-            }
-            #savings-table {
-                order: 13;
-            }
-            #bills-table {
-                order: 14;
-            }
-            #expenses-table {
-                order: 15;
-            }
-            #debt-table {
-                order: 16;
-            }
-            #summary-table {
-                order: 17;
-            }
-        }
-        #income-table input[type="text"], 
-        #savings-table input[type="text"], 
-        #bills-table input[type="text"], 
-        #expenses-table input[type="text"],
-        #debt-table input[type="text"] {
-            text-align: left;
-        }
-        .summary-col {
-            width: 35.5%;
-            height: 17.5px;
+            display: block;
         }
 
-        .dark-theme {
-            background-color: #F7E9EC;
-            color: #000000;
-        }
-        .dark-theme .subtitle,
-        .dark-theme h1 {
-            color: #000000;
-        }
-        .dark-theme .header-item:nth-child(1) .header-item-title {
-            background-color: #E79FB1;
-        }
-        .dark-theme .header-item:nth-child(1) .header-item-input {
-            background-color: #F7F3F3;
-        }
-        .dark-theme .header-item:nth-child(2) .header-item-title {
-            background-color: #F4C8CC;
-        }
-        .dark-theme .header-item:nth-child(2) .header-item-input {
-            background-color: #F7F3F3;
-        }
-        .dark-theme .header-item:nth-child(3) .header-item-title {
-            background-color: #F6ADB8;
-        }
-        .dark-theme .header-item:nth-child(3) .header-item-input {
-            background-color: #F7F3F3;
-        }
-        .dark-theme .income-header {
-            background-color: #FABAD1;
-        }
-        .dark-theme #income-table td,
-        .dark-theme #savings-table td,
-        .dark-theme #bills-table td,
-        .dark-theme #expenses-table td,
-        .dark-theme #debt-table td,
-        .dark-theme #summary-table td {
-            background-color: #F7F3F3;
-        }
-        .dark-theme #income-table input,
-        .dark-theme #savings-table input,
-        .dark-theme #bills-table input,
-        .dark-theme #expenses-table input,
-        .dark-theme #debt-table input,
-        .dark-theme #summary-table input {
-            background-color: #F7F3F3;
-        }
-        .dark-theme .savings-header {
-            background-color: #F4C8CC;
-        }
-        .dark-theme .bills-header {
-            background-color: #DC5B86;
-        }
-        .dark-theme .expenses-header {
-            background-color: #F6ADB8;
-        }
-        .dark-theme .debt-header {
-            background-color: #D3A8B5;
-        }
-        .dark-theme .summary-header {
-            background-color: #EFE0D5;
-        }
-        .dark-theme .download {
-            background-color: #DCEDBF;
-            color: black;
-        }
-        .dark-theme .buy-coffee {
-            background-color: #E79FB1;
-            color: white;
-        }
-
-        @keyframes buttonClick {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        .theme-button.active {
-            animation: buttonClick 0.3s ease;
-        }
-        
-        .additional-text {
-            text-align: left;
-            margin-top: 10px;
-            font-size: 0.7em;
-            color: #333;
-        }
-
-        /* Dropdown Menu for Tables Button */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-content {
+        .product-landing-page {
             display: none;
-            position: absolute;
-            background-color: #fff; /* Changed to white */
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            border-bottom: 1px solid #ddd;
-        }
-        .dropdown-content a:last-child {
-            border-bottom: none;
-        }
-        .dropdown-content a:hover {
-            background-color: #ddd;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        .dropbtn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-        }
-        .dropbtn svg {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            padding: 8px;
-            color: black; /* Ensure SVG button color stays black */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="dropdown">
-            <button class="dropbtn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <line x1="4" y1="10" x2="20" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <line x1="10" y1="10" x2="10" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-            <div class="dropdown-content">
-                <a href="index.html">Home</a>
-                <a href="bank-tracker.html">Bank Tracker</a>
-                <a href="cash-tracker.html">Cash Tracker</a>
-                <a href="gift-holiday-budget.html">Gift & Holiday Budget</a>
-                <a href="grocery-tracker.html">Grocery Tracker</a>
-                <a href="savings-goal-tracker.html">Savings Goal Tracker</a>
-                <a href="subscriptions-tracker.html">Subscriptions Tracker</a>
-            </div>
-        </div>
-
-        <button class="theme-button" id="theme-button">Change Theme</button>
-        <div class="subtitle">Grab your favorite drink and plan your paycheck ☕</div>
-        <h1>Paycheck Budget Planner</h1>
-        <div class="header">
-            <div class="header-item">
-                <div class="header-item-title">PAYCHECK AMOUNT</div>
-                <div class="header-item-input"><input type="number" id="paycheck-amount"></div>
-            </div>
-            <div class="header-item">
-                <div class="header-item-title">PAYCHECK DATE/MONTH</div>
-                <div class="header-item-input"><input type="date" id="paycheck-date"></div>
-            </div>
-            <div class="header-item">
-                <div class="header-item-title">PAYCHECK PERIOD</div>
-                <div class="header-item-input"><input type="text" id="paycheck-period"></div>
-            </div>
-        </div>
-        <div class="tables-container">
-            <div class="table-wrapper">
-                <table id="income-table">
-                    <thead>
-                        <tr class="income-header">
-                            <th>INCOME 💸</th>
-                            <th>BUDGET</th>
-                            <th>ACTUAL</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><input type="text" id="income-source-1" placeholder=""></td><td><input type="number" class="budget" id="income-budget-1"></td><td><input type="number" class="actual" id="income-actual-1"></td></tr>
-                        <tr><td><input type="text" id="income-source-2" placeholder=""></td><td><input type="number" class="budget" id="income-budget-2"></td><td><input type="number" class="actual" id="income-actual-2"></td></tr>
-                        <tr><td><input type="text" id="income-source-3" placeholder=""></td><td><input type="number" class="budget" id="income-budget-3"></td><td><input type="number" class="actual" id="income-actual-3"></td></tr>
-                        <tr><td><input type="text" id="income-source-4" placeholder=""></td><td><input type="number" class="budget" id="income-budget-4"></td><td><input type="number" class="actual" id="income-actual-4"></td></tr>
-                        <tr><td><input type="text" id="income-source-5" placeholder=""></td><td><input type="number" class="budget" id="income-budget-5"></td><td><input type="number" class="actual" id="income-actual-5"></td></tr>
-                        <tr class="totals"><td>Total</td><td id="income-budget-total">0</td><td id="income-actual-total">0</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="table-wrapper">
-                <table id="savings-table">
-                    <thead>
-                        <tr class="savings-header">
-                            <th>SAVINGS 💰</th>
-                            <th>BUDGET</th>
-                            <th>ACTUAL</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><input type="text" id="savings-source-1" placeholder=""></td><td><input type="number" class="budget" id="savings-budget-1"></td><td><input type="number" class="actual" id="savings-actual-1"></td></tr>
-                        <tr><td><input type="text" id="savings-source-2" placeholder=""></td><td><input type="number" class="budget" id="savings-budget-2"></td><td><input type="number" class="actual" id="savings-actual-2"></td></tr>
-                        <tr><td><input type="text" id="savings-source-3" placeholder=""></td><td><input type="number" class="budget" id="savings-budget-3"></td><td><input type="number" class="actual" id="savings-actual-3"></td></tr>
-                        <tr><td><input type="text" id="savings-source-4" placeholder=""></td><td><input type="number" class="budget" id="savings-budget-4"></td><td><input type="number" class="actual" id="savings-actual-4"></td></tr>
-                        <tr><td><input type="text" id="savings-source-5" placeholder=""></td><td><input type="number" class="budget" id="savings-budget-5"></td><td><input type="number" class="actual" id="savings-actual-5"></td></tr>
-                        <tr class="totals"><td>Total</td><td id="savings-budget-total">0</td><td id="savings-actual-total">0"></td></tr>
-                    </tbody>
-                </table>
-            </div>
-<div class="table-wrapper">
-    <table id="bills-table">
-        <thead>
-            <tr class="bills-header">
-                <th>BILLS 🧾</th>
-                <th>BUDGET</th>
-                <th>ACTUAL</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td><input type="text" id="bills-source-1" placeholder=""></td><td><input type="number" class="budget" id="bills-budget-1"></td><td><input type="number" class="actual" id="bills-actual-1"></td></tr>
-            <tr><td><input type="text" id="bills-source-2" placeholder=""></td><td><input type="number" class="budget" id="bills-budget-2"></td><td><input type="number" class="actual" id="bills-actual-2"></td></tr>
-            <tr><td><input type="text" id="bills-source-3" placeholder=""></td><td><input type="number" class="budget" id="bills-budget-3"></td><td><input type="number" class="actual" id="bills-actual-3"></td></tr>
-            <tr><td><input type="text" id="bills-source-4" placeholder=""></td><td><input type="number" class="budget" id="bills-budget-4"></td><td><input type="number" class="actual" id="bills-actual-4"></td></tr>
-            <tr><td><input type="text" id="bills-source-5" placeholder=""></td><td><input type="number" class="budget" id="bills-budget-5"></td><td><input type="number" class="actual" id="bills-actual-5"></td></tr>
-            <tr><td><input type="text" id="bills-source-6" placeholder=""></td><td><input type="number" class="budget" id="bills-budget-6"></td><td><input type="number" class="actual" id="bills-actual-6"></td></tr>
-            <tr><td><input type="text" id="bills-source-7" placeholder=""></td><td><input type="number" class="budget" id="bills-budget-7"></td><td><input type="number" class="actual" id="bills-actual-7"></td></tr>
-            <tr><td><input type="text" id="bills-source-8" placeholder=""></td><td><input type="number" class="budget" id="bills-budget-8"></td><td><input type="number" class="actual" id="bills-actual-8"></td></tr>
-            <tr><td><input type="text" id="bills-source-9" placeholder=""></td><td><input type="number" class="budget" id="bills-budget-9"></td><td><input type="number" class="actual" id="bills-actual-9"></td></tr>
-            <tr><td><input type="text" id="bills-source-10" placeholder=""></td><td><input type="number" class="budget" id="bills-budget-10"></td><td><input type="number" class="actual" id="bills-actual-10"></td></tr>
-            <tr class="totals"><td>Total</td><td id="bills-budget-total">0</td><td id="bills-actual-total">0</td></tr>
-        </tbody>
-    </table>
-</div>
-<div class="table-wrapper">
-    <table id="expenses-table">
-        <thead>
-            <tr class="expenses-header">
-                <th>EXPENSES 🛍️</th>
-                <th>BUDGET</th>
-                <th>ACTUAL</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td><input type="text" id="expenses-source-1" placeholder=""></td><td><input type="number" class="budget" id="expenses-budget-1"></td><td><input type="number" class="actual" id="expenses-actual-1"></td></tr>
-            <tr><td><input type="text" id="expenses-source-2" placeholder=""></td><td><input type="number" class="budget" id="expenses-budget-2"></td><td><input type="number" class="actual" id="expenses-actual-2"></td></tr>
-            <tr><td><input type="text" id="expenses-source-3" placeholder=""></td><td><input type="number" class="budget" id="expenses-budget-3"></td><td><input type="number" class="actual" id="expenses-actual-3"></td></tr>
-            <tr><td><input type="text" id="expenses-source-4" placeholder=""></td><td><input type="number" class="budget" id="expenses-budget-4"></td><td><input type="number" class="actual" id="expenses-actual-4"></td></tr>
-            <tr><td><input type="text" id="expenses-source-5" placeholder=""></td><td><input type="number" class="budget" id="expenses-budget-5"></td><td><input type="number" class="actual" id="expenses-actual-5"></td></tr>
-            <tr><td><input type="text" id="expenses-source-6" placeholder=""></td><td><input type="number" class="budget" id="expenses-budget-6"></td><td><input type="number" class="actual" id="expenses-actual-6"></td></tr>
-            <tr><td><input type="text" id="expenses-source-7" placeholder=""></td><td><input type="number" class="budget" id="expenses-budget-7"></td><td><input type="number" class="actual" id="expenses-actual-7"></td></tr>
-            <tr><td><input type="text" id="expenses-source-8" placeholder=""></td><td><input type="number" class="budget" id="expenses-budget-8"></td><td><input type="number" class="actual" id="expenses-actual-8"></td></tr>
-            <tr><td><input type="text" id="expenses-source-9" placeholder=""></td><td><input type="number" class="budget" id="expenses-budget-9"></td><td><input type="number" class="actual" id="expenses-actual-9"></td></tr>
-            <tr><td><input type="text" id="expenses-source-10" placeholder=""></td><td><input type="number" class="budget" id="expenses-budget-10"></td><td><input type="number" class="actual" id="expenses-actual-10"></td></tr>
-            <tr><td><input type="text" id="expenses-source-11" placeholder=""></td><td><input type="number" class="budget" id="expenses-budget-11"></td><td><input type="number" class="actual" id="expenses-actual-11"></td></tr>
-            <tr class="totals"><td>Total</td><td id="expenses-budget-total">0</td><td id="expenses-actual-total">0</td></tr>
-        </tbody>
-    </table>
-</div>
-<div class="table-wrapper">
-    <table id="debt-table">
-        <thead>
-            <tr class="debt-header">
-                <th>DEBT 💳</th>
-                <th>BUDGET</th>
-                <th>ACTUAL</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td><input type="text" id="debt-source-1" placeholder=""></td><td><input type="number" class="budget" id="debt-budget-1"></td><td><input type="number" class="actual" id="debt-actual-1"></td></tr>
-            <tr><td><input type="text" id="debt-source-2" placeholder=""></td><td><input type="number" class="budget" id="debt-budget-2"></td><td><input type="number" class="actual" id="debt-actual-2"></td></tr>
-            <tr><td><input type="text" id="debt-source-3" placeholder=""></td><td><input type="number" class="budget" id="debt-budget-3"></td><td><input type="number" class="actual" id="debt-actual-3"></td></tr>
-            <tr><td><input type="text" id="debt-source-4" placeholder=""></td><td><input type="number" class="budget" id="debt-budget-4"></td><td><input type="number" class="actual" id="debt-actual-4"></td></tr>
-            <tr><td><input type="text" id="debt-source-5" placeholder=""></td><td><input type="number" class="budget" id="debt-budget-5"></td><td><input type="number" class="actual" id="debt-actual-5"></td></tr>
-            <tr><td><input type="text" id="debt-source-6" placeholder=""></td><td><input type="number" class="budget" id="debt-budget-6"></td><td><input type="number" class="actual" id="debt-actual-6"></td></tr>
-            <tr class="totals"><td>Total</td><td id="debt-budget-total">0</td><td id="debt-actual-total">0"></td></tr>
-        </tbody>
-    </table>
-</div>
-<div class="table-wrapper">
-    <table id="summary-table">
-        <thead>
-            <tr class="summary-header">
-                <th class="summary-col">SUMMARY 📊</th>
-                <th class="summary-col">BUDGET</th>
-                <th class="summary-col">ACTUAL</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td class="summary-col">+ Income</td><td id="summary-income-budget">0</td><td id="summary-income-actual">0"></td></tr>
-            <tr><td class="summary-col">- Bills</td><td id="summary-bills-budget">0</td><td id="summary-bills-actual">0"></td></tr>
-            <tr><td class="summary-col">- Expenses</td><td id="summary-expenses-budget">0"></td><td id="summary-expenses-actual">0"></td></tr>
-            <tr><td class="summary-col">- Debt</td><td id="summary-debt-budget">0"></td><td id="summary-debt-actual">0"></td></tr>
-            <tr><td class="summary-col">- Savings</td><td id="summary-savings-budget">0"></td><td id="summary-savings-actual">0"></td></tr>
-            <tr><td class="summary-col">- Sinking Funds</td><td><input type="number" id="summary-sinkingfunds-budget" value=""></td><td><input type="number" id="summary-sinkingfunds-actual" value=""></td></tr>
-            <tr class="totals"><td class="summary-col">Total</td><td id="summary-total-budget">0"></td><td id="summary-total-actual">0"></td></tr>
-        </tbody>
-    </table>
-</div>
-</div>
-<div class="toggle-buttons-container">
-    <button class="toggle-button" id="toggle-budget">Budget</button>
-    <button class="toggle-button" id="toggle-actual">Actual</button>
-</div>
-<div class="chart-buttons-container">
-    <div class="chart-container">
-        <canvas id="budgetChart"></canvas>
+    <h1>Product Landing Page Generator</h1>
+    <div id="product-form">
+        <input type="text" id="product-name" placeholder="Product Name">
+        <input type="text" id="product-price" placeholder="Product Price">
+        <textarea id="product-description" placeholder="Product Description"></textarea>
+        <input type="text" id="product-image" placeholder="Product Image URL">
+        <input type="email" id="paypal-email" placeholder="Your PayPal Email">
+        <button onclick="generateLandingPage()">Generate Landing Page</button>
     </div>
-    <div class="buttons-container">
-        <p>Download this page as a PDF to print & write on it, or use it in Goodnotes App ✍️</p>
-        <button class="download" id="download-button">DOWNLOAD</button>
-        <button class="buy-coffee">MY TIP JAR ❤️</button>
-        <p class="additional-text">Help My Dreams Take Flight</p>
-    </div>
-</div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-const ctx = document.getElementById('budgetChart').getContext('2d');
-let budgetChartColors = {
-    light: ['#BEDA8D', '#F5ED6F', '#FABAD1', '#EBC7E4', '#F4C8CC'],
-    dark: ['#FABAD1', '#F4C8CC', '#DC5B86', '#F6ADB8', '#D3A8B5']
-};
+    <div id="generated-links"></div>
 
-const budgetChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-        labels: ['Income', 'Savings', 'Bills', 'Expenses', 'Debt'],
-        datasets: [{
-            label: 'Budget',
-            data: [0, 0, 0, 0, 0],
-            backgroundColor: budgetChartColors.light,
-            borderColor: budgetChartColors.light,
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        return context.label + ': ' + context.raw;
-                    }
+    <script>
+        async function validateImageUrl(url) {
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    return url;
+                } else {
+                    throw new Error('Image not found.');
                 }
+            } catch (error) {
+                alert('Image URL is not valid. Please provide a valid image URL.');
+                throw error;
             }
         }
-    }
-});
 
-const updateTotals = () => {
-    const tables = ['income', 'savings', 'bills', 'expenses', 'debt'];
-    let summary = {
-        income: {budget: 0, actual: 0},
-        bills: {budget: 0, actual: 0},
-        expenses: {budget: 0, actual: 0},
-        debt: {budget: 0, actual: 0},
-        savings: {budget: 0, actual: 0},
-        sinkingfunds: {budget: parseFloat(document.getElementById('summary-sinkingfunds-budget').value) || 0, actual: parseFloat(document.getElementById('summary-sinkingfunds-actual').value) || 0}
-    };
+        async function generateLandingPage() {
+            const name = document.getElementById('product-name').value;
+            const price = document.getElementById('product-price').value;
+            const description = document.getElementById('product-description').value;
+            const imageUrl = document.getElementById('product-image').value;
+            const paypalEmail = document.getElementById('paypal-email').value;
 
-    tables.forEach(table => {
-        let budgetTotal = 0;
-        let actualTotal = 0;
-        document.querySelectorAll(`#${table}-table .budget`).forEach(input => budgetTotal += parseFloat(input.value) || 0);
-        document.querySelectorAll(`#${table}-table .actual`).forEach(input => actualTotal += parseFloat(input.value) || 0);
-        document.getElementById(`${table}-budget-total`).innerText = budgetTotal.toFixed(2);
-        document.getElementById(`${table}-actual-total`).innerText = actualTotal.toFixed(2);
-        summary[table].budget = budgetTotal;
-        summary[table].actual = actualTotal;
-    });
+            if (name && price && description && imageUrl && paypalEmail) {
+                try {
+                    const validImageUrl = await validateImageUrl(imageUrl);
 
-    const totalBudget = summary.income.budget - summary.bills.budget - summary.expenses.budget - summary.debt.budget - summary.savings.budget - summary.sinkingfunds.budget;
-const totalActual = summary.income.actual - summary.bills.actual - summary.expenses.actual - summary.debt.actual - summary.savings.actual - summary.sinkingfunds.actual;
+                    const landingPageHtml = `
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>${name} - Buy Now</title>
+                            <style>
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    padding: 20px;
+                                }
+                                .product-container {
+                                    border: 1px solid #ddd;
+                                    padding: 20px;
+                                    margin-bottom: 20px;
+                                    width: 100%;
+                                    max-width: 600px;
+                                }
+                                .product-image {
+                                    width: 100%;
+                                    max-width: 400px;
+                                    height: auto;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="product-container">
+                                <h1>${name}</h1>
+                                <img class="product-image" src="${validImageUrl}" alt="${name}">
+                                <p>${description}</p>
+                                <p>Price: $${price}</p>
+                                <div>
+                                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                                        <input type="hidden" name="cmd" value="_xclick">
+                                        <input type="hidden" name="business" value="${paypalEmail}">
+                                        <input type="hidden" name="item_name" value="${name}">
+                                        <input type="hidden" name="amount" value="${price}">
+                                        <input type="hidden" name="currency_code" value="USD">
+                                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                                    </form>
+                                </div>
+                            </div>
+                        </body>
+                        </html>
+                    `;
 
-document.getElementById('summary-income-budget').innerText = summary.income.budget.toFixed(2);
-document.getElementById('summary-income-actual').innerText = summary.income.actual.toFixed(2);
-document.getElementById('summary-savings-budget').innerText = summary.savings.budget.toFixed(2);
-document.getElementById('summary-savings-actual').innerText = summary.savings.actual.toFixed(2);
-document.getElementById('summary-bills-budget').innerText = summary.bills.budget.toFixed(2);
-document.getElementById('summary-bills-actual').innerText = summary.bills.actual.toFixed(2);
-document.getElementById('summary-expenses-budget').innerText = summary.expenses.budget.toFixed(2);
-document.getElementById('summary-expenses-actual').innerText = summary.expenses.actual.toFixed(2);
-document.getElementById('summary-debt-budget').innerText = summary.debt.budget.toFixed(2);
-document.getElementById('summary-debt-actual').innerText = summary.debt.actual.toFixed(2);
-document.getElementById('summary-total-budget').innerText = totalBudget.toFixed(2);
-document.getElementById('summary-total-actual').innerText = totalActual.toFixed(2);
+                    const blob = new Blob([landingPageHtml], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `${name.replace(/\s+/g, '-').toLowerCase()}-landing-page.html`;
+                    link.innerText = `Download landing page for ${name}`;
+                    link.className = 'product-link';
 
-// Update the chart data
-budgetChart.data.datasets[0].data = [
-    summary.income.budget,
-    summary.savings.budget,
-    summary.bills.budget,
-    summary.expenses.budget,
-    summary.debt.budget
-];
-budgetChart.update();
-};
+                    const linksContainer = document.getElementById('generated-links');
+                    linksContainer.appendChild(link);
 
-document.querySelectorAll('.budget').forEach(input => {
-input.addEventListener('input', updateTotals);
-});
-
-document.querySelectorAll('.actual').forEach(input => {
-input.addEventListener('input', updateTotals);
-});
-
-document.getElementById('summary-sinkingfunds-budget').addEventListener('input', updateTotals);
-document.getElementById('summary-sinkingfunds-actual').addEventListener('input', updateTotals);
-
-const toggleToBudget = () => {
-const summary = {
-income: parseFloat(document.getElementById('income-budget-total').innerText) || 0,
-savings: parseFloat(document.getElementById('savings-budget-total').innerText) || 0,
-bills: parseFloat(document.getElementById('bills-budget-total').innerText) || 0,
-expenses: parseFloat(document.getElementById('expenses-budget-total').innerText) || 0,
-debt: parseFloat(document.getElementById('debt-budget-total').innerText) || 0,
-sinkingfunds: parseFloat(document.getElementById('summary-sinkingfunds-budget').value) || 0,
-};
-
-budgetChart.data.datasets[0].data = [
-summary.income,
-summary.savings,
-summary.bills,
-summary.expenses,
-summary.debt,
-summary.sinkingfunds
-];
-budgetChart.update();
-};
-
-const toggleToActual = () => {
-const summary = {
-income: parseFloat(document.getElementById('income-actual-total').innerText) || 0,
-savings: parseFloat(document.getElementById('savings-actual-total').innerText) || 0,
-bills: parseFloat(document.getElementById('bills-actual-total').innerText) || 0,
-expenses: parseFloat(document.getElementById('expenses-actual-total').innerText) || 0,
-debt: parseFloat(document.getElementById('debt-actual-total').innerText) || 0,
-sinkingfunds: parseFloat(document.getElementById('summary-sinkingfunds-actual').value) || 0,
-};
-
-budgetChart.data.datasets[0].data = [
-summary.income,
-summary.savings,
-summary.bills,
-summary.expenses,
-summary.debt,
-summary.sinkingfunds
-];
-budgetChart.update();
-};
-
-document.getElementById('toggle-budget').addEventListener('click', toggleToBudget);
-document.getElementById('toggle-actual').addEventListener('click', toggleToActual);
-
-const themeButton = document.getElementById('theme-button');
-const container = document.querySelector('.container');
-let isDarkTheme = false;
-
-themeButton.addEventListener('click', () => {
-    themeButton.classList.add('active');
-    setTimeout(() => {
-        themeButton.classList.remove('active');
-    }, 300); // 300ms matches the duration of the animation
-
-    isDarkTheme = !isDarkTheme;
-    localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
-    applyTheme();
-});
-
-function applyTheme() {
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme === 'dark') {
-        container.classList.add('dark-theme');
-        budgetChart.data.datasets[0].backgroundColor = budgetChartColors.dark;
-        budgetChart.data.datasets[0].borderColor = budgetChartColors.dark;
-    } else {
-        container.classList.remove('dark-theme');
-        budgetChart.data.datasets[0].backgroundColor = budgetChartColors.light;
-        budgetChart.data.datasets[0].borderColor = budgetChartColors.light;
-    }
-    budgetChart.update();
-}
-
-// Initialize totals on page load
-updateTotals();
-
-// Function to save all inputs to localStorage
-function saveToLocalStorage() {
-const inputs = document.querySelectorAll('input');
-inputs.forEach(input => {
-localStorage.setItem(input.id, input.value);
-});
-}
-
-// Function to load all inputs from localStorage
-function loadFromLocalStorage() {
-const inputs = document.querySelectorAll('input');
-inputs.forEach(input => {
-if (localStorage.getItem(input.id)) {
-input.value = localStorage.getItem(input.id);
-}
-});
-}
-
-// Save inputs on change
-document.addEventListener('DOMContentLoaded', () => {
-    applyTheme(); // Apply saved theme on page load
-    loadFromLocalStorage();  // Load saved data on page load
-
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
-        input.addEventListener('input', () => {
-            saveToLocalStorage();
-            updateTotals();
-        });
-    });
-
-    updateTotals(); // Initialize totals on page load
-});
-</script>
-<script>
-document.getElementById('download-button').addEventListener('click', function() {
-window.location.href = 'https://bossinpajamas.com/b/paycheckbudgetplanner';
-});
+                    // Clear input fields
+                    document.getElementById('product-name').value = '';
+                    document.getElementById('product-price').value = '';
+                    document.getElementById('product-description').value = '';
+                    document.getElementById('product-image').value = '';
+                    document.getElementById('paypal-email').value = '';
+                } catch (error) {
+                    console.error('Error generating landing page:', error);
+                }
+            } else {
+                alert('Please enter all product details, including your PayPal email.');
+            }
+        }
     </script>
 </body>
 </html>
